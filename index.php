@@ -1,0 +1,430 @@
+<?php
+//menyertakan code dari file koneksi
+include "koneksi.php";
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Daily Journal</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      xintegrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link rel="icon" href="img/logo.png" />
+    <style>
+     
+      .bg-custom-subtle {
+        background-color: #f7d2d6 !important; 
+        }
+      .accordion-button:not(.collapsed) {
+        background-color: #da6a73;
+        color: white;
+        }
+      .dark-mode {
+        background-color: #121212;
+        color: #e0e0e0;
+        }
+      .dark-mode .navbar,
+      .dark-mode .card,
+      .dark-mode .p-4.border.rounded.shadow-sm {
+        background-color: #1e1e1e !important;
+        border-color: #333 !important;
+        color: #e0e0e0;
+      }
+      .dark-mode .card-body,
+      .dark-mode .p-4.border.rounded.shadow-sm p {
+        color: #ccc;
+      }
+      .dark-mode .bg-custom-subtle {
+        background-color: #310000 !important; 
+      }
+      .dark-mode .accordion-item {
+        background-color: #1e1e1e;
+        border-color: #333;
+      }
+      .dark-mode .accordion-body {
+        color: #ccc;
+      }
+      .dark-mode .accordion-button {
+        color: #e0e0e0;
+        background-color: #2a2a2a;
+      }
+      .dark-mode .accordion-button:not(.collapsed) {
+        background-color: #da6a73; 
+        color: white;
+      }
+      .dark-mode footer {
+        background-color: #121212 !important;
+        color: #e0e0e0;
+      }
+    </style>
+  </head>
+  <!-- Initialize the body with the default light theme -->
+  <body data-bs-theme="light">
+    <!-- NAVBAR START -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">My Daily Journal</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#article">Article</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#gallery">Gallery</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#schedule">Schedule</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#aboutme">About Me</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="login.php" target="_blank">Login</a>
+            </li>
+            <!-- Theme Switcher Buttons Added Here -->
+            <li class="nav-item ms-lg-3 d-flex align-items-center">
+                <button id="lightThemeBtn" class="btn btn-sm btn-outline-secondary me-2" title="Light Theme">
+                    <i class="bi bi-sun-fill"></i> Light
+                </button>
+                <button id="darkThemeBtn" class="btn btn-sm btn-dark" title="Dark Theme">
+                    <i class="bi bi-moon-fill"></i> Dark
+                </button>
+            </li>
+            <!-- End Theme Switcher -->
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- NAVBAR END -->
+    <!-- HERO START -->
+    <!-- Replaced bg-danger-subtle with bg-custom-subtle -->
+    <section id="hero" class="text-center bg-custom-subtle p-5 text-sm-start">
+      <div class="container">
+        <div class="d-sm-flex flex-sm-row-reverse align-items-center">
+          <!-- Added fallback for img -->
+          <img src="img/banner.jpg" class="img-fluid rounded shadow-lg mb-4 mb-sm-0" width="300" onerror="this.onerror=null; this.src='https://placehold.co/300x200/555/FFF?text=Hero+Image';" />
+          <div>
+            <h1 class="fw-bold display-4">
+              Create Memories, Save Memories, Everyday
+            </h1>
+            <h4 class="lead display-6">
+              Mencatat semua kegiatan sehari-hari yang ada tanpa terkecuali
+            </h4>
+            <h6>
+              <span id="tanggal"></span>
+              <span id="jam"></span>
+            </h6>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- HERO END -->
+    <!-- ARTICLE START -->
+    <section id="article" class="text-center p-5">
+      <div class="container">
+        <h1 class="fw-bold display-4 pb-3">Article</h1>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+          				<?php
+        $sql = "SELECT * FROM article ORDER BY tanggal DESC";
+        $hasil = $conn->query($sql); 
+
+        while($row = $hasil->fetch_assoc()){
+ 
+        ?>
+          <!-- col begin -->
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              <img src="img/<?=$row["gambar"]?>" class="card-img-top" alt="Kelompok Belajar" onerror="this.onerror=null; this.src='https://placehold.co/400x200/555/FFF?text=Activity+3';" /> -->
+              <div class="card-body">
+                <h5 class="card-title"><?=$row["judul"]?></h5>
+                <p class="card-text">
+                  <?=$row["isi"]?>
+                </p>
+              </div>
+              <div class="card-footer">
+                <small class="text-body-secondary">
+                  <?=$row["tanggal"]?>
+                </small>
+              </div>
+            </div>
+          </div>
+         <!-- col end --> 
+          <?php
+        }
+        ?>
+          </div>
+        </div>
+    </section>
+    <!-- ARTICLE END -->
+    <!-- GALLERY START -->
+    <!-- Replaced bg-danger-subtle with bg-custom-subtle -->
+    <section id="gallery" class="bg-custom-subtle text-center p-5">
+      <div class="container">
+        <h1 class="fw-bold display-4 pb-3">Gallery</h1>
+        <div id="carouselExample" class="carousel slide shadow-lg rounded">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="https://placehold.co/1200x600/555/FFF?text=Gallery+Image+1" class="d-block w-100 rounded" alt="Gallery 1" />
+            </div>
+            <div class="carousel-item">
+              <img src="https://placehold.co/1200x600/666/FFF?text=Gallery+Image+2" class="d-block w-100 rounded" alt="Gallery 2" />
+            </div>
+            <div class="carousel-item">
+              <img src="https://placehold.co/1200x600/777/FFF?text=Gallery+Image+3" class="d-block w-100 rounded" alt="Gallery 3" />
+            </div>
+            <div class="carousel-item">
+              <img src="https://placehold.co/1200x600/888/FFF?text=Gallery+Image+4" class="d-block w-100 rounded" alt="Gallery 4" />
+            </div>
+          </div>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExample"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExample"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </section>
+    <!-- GALLERY END -->
+    <!-- ACTIVITY START -->
+    <section id="schedule" class="text-center p-5">
+      <h1 class="fw-bold display-4 pb-3">Schedule</h1>
+      <div
+        class="row row-cols-2 row-cols-sm-3 row-cols-lg-4 g-4 justify-content-center"
+      >
+        <div class="col">
+          <div class="p-4 border rounded shadow-sm h-100">
+            <i class="bi bi-book text-danger fs-1"></i>
+            <h5 class="mt-3">Membaca</h5>
+            <p>Menambah wawasan setiap pagi sebelum beraktivitas.</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-4 border rounded shadow-sm h-100">
+            <i class="bi bi-laptop text-danger fs-1"></i>
+            <h5 class="mt-3">Menulis</h5>
+            <p>Mencatat setiap pengalaman harian di jurnal pribadi.</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-4 border rounded shadow-sm h-100">
+            <i class="bi bi-people text-danger fs-1"></i>
+            <h5 class="mt-3">Diskusi</h5>
+            <p>Bertukar ide dengan teman dalam kelompok belajar.</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-4 border rounded shadow-sm h-100">
+            <i class="bi bi-bicycle text-danger fs-1"></i>
+            <h5 class="mt-3">Olahraga</h5>
+            <p>Menjaga kesehatan dengan bersepeda sore hari.</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-4 border rounded shadow-sm h-100">
+            <i class="bi bi-film text-danger fs-1"></i>
+            <h5 class="mt-3">Movie</h5>
+            <p>Menonton film yang bagus di bioskop.</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-4 border rounded shadow-sm h-100">
+            <i class="bi bi-bag text-danger fs-1"></i>
+            <h5 class="mt-3">Belanja</h5>
+            <p>Membeli kebutuhan bulanan di supermarket.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ACTIVITY END -->
+    <!-- ABOUT ME START -->
+    <!-- Replaced bg-danger-subtle with bg-custom-subtle -->
+    <section id="aboutme" class="bg-custom-subtle text-center p-5">
+      <h1 class="fw-bold display-4 pb-3">About Me</h1>
+      <div class="accordion container" id="accordionExample" style="max-width: 800px;">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseOne"
+              aria-expanded="true"
+              aria-controls="collapseOne"
+            >
+              Universitas Dian Nuswantoro Semarang
+            </button>
+          </h2>
+          <div
+            id="collapseOne"
+            class="accordion-collapse collapse show"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">
+              <strong>This is the first item’s accordion body.</strong> It is
+              shown by default, until the collapse plugin adds the appropriate
+              classes that we use to style each element. These classes control
+              the overall appearance, as well as the showing and hiding via CSS
+              transitions. You can modify any of this with custom CSS or
+              overriding our default variables. It’s also worth noting that just
+              about any HTML can go within the <code>.accordion-body</code>,
+              though the transition does limit overflow.
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseTwo"
+              aria-expanded="false"
+              aria-controls="collapseTwo"
+            >
+              SMK N 1 Pringapus (2020–2023)
+            </button>
+          </h2>
+          <div
+            id="collapseTwo"
+            class="accordion-collapse collapse"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">
+              <strong>This is the second item’s accordion body.</strong> It is
+              hidden by default, until the collapse plugin adds the appropriate
+              classes that we use to style each element. These classes control
+              the overall appearance, as well as the showing and hiding via CSS
+              transitions. You can modify any of this with custom CSS or
+              overriding our default variables. It’s also worth noting that just
+              about any HTML can go within the <code>.accordion-body</code>,
+              though the transition does limit overflow.
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseThree"
+              aria-expanded="false"
+              aria-controls="collapseThree"
+            >
+              SMP Negeri1 Bergas (2016–2019)
+            </button>
+          </h2>
+          <div
+            id="collapseThree"
+            class="accordion-collapse collapse"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">
+              <strong>This is the third item’s accordion body.</strong> It is
+              hidden by default, until the collapse plugin adds the appropriate
+              classes that we use to style each element. These classes control
+              the overall appearance, as well as the showing and hiding via CSS
+              transitions. You can modify any of this with custom CSS or
+              overriding our default variables. It’s also worth noting that just
+              about any HTML can go within the <code>.accordion-body</code>,
+              though the transition does limit overflow.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ABOUT ME END -->
+    <!-- FOOTER START -->
+    <footer class="text-center p-4 border-top">
+      <div>
+        <a href="#" class="text-decoration-none text-dark"><i class="h2 bi bi-instagram p-2"></i></a>
+        <a href="#" class="text-decoration-none text-dark"><i class="h2 bi bi-twitter p-2"></i></a>
+        <a href="#" class="text-decoration-none text-dark"><i class="h2 bi bi-whatsapp p-2"></i></a>
+      </div>
+      <div><p>IBRAM RAKA  &copy; 2025</p></div>
+    </footer>
+    <!-- FOOTER END -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      xintegrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+        function switchTheme(theme) {
+            const body = document.body;
+            const darkBtn = document.getElementById('darkThemeBtn');
+            const lightBtn = document.getElementById('lightThemeBtn');
+            body.setAttribute('data-bs-theme', theme);
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+                darkBtn.classList.remove('btn-dark');
+                darkBtn.classList.add('btn-secondary');
+                lightBtn.classList.remove('btn-secondary');
+                lightBtn.classList.add('btn-outline-secondary');
+            } else {
+                body.classList.remove('dark-mode');
+                darkBtn.classList.remove('btn-secondary');
+                darkBtn.classList.add('btn-dark');
+                lightBtn.classList.remove('btn-outline-secondary');
+                lightBtn.classList.add('btn-secondary');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const darkBtn = document.getElementById('darkThemeBtn');
+            const lightBtn = document.getElementById('lightThemeBtn');
+            switchTheme('light'); 
+            darkBtn.addEventListener('click', () => switchTheme('dark'));
+            lightBtn.addEventListener('click', () => switchTheme('light'));
+            function updateTime() {
+                const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
+                const dateString = now.toLocaleDateString('id-ID', options);
+                const timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                
+                document.getElementById('tanggal').textContent = dateString;
+                document.getElementById('jam').textContent = timeString;
+            }
+            updateTime();
+            setInterval(updateTime, 1000);
+        });
+    </script>
+  </body>
+</html>
