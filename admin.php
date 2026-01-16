@@ -62,6 +62,7 @@ if (!isset($_SESSION['username'])) {
                     <?= $_SESSION['username']?>
                 </a>
                 <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="admin.php?page=profile">Profile</a></li>
                     <li><a class="dropdown-item" href="logout.php">Logout</a></li> 
                 </ul>
             </li> 
@@ -93,7 +94,7 @@ if (!isset($_SESSION['username'])) {
 				<a href="https://twitter.com/udinusofficial"><i class="bi bi-twitter h2 p-2 text-dark"></i></a>
 				<a href="https://wa.me/+62812685577"><i class="bi bi-whatsapp h2 p-2 text-dark"></i></a>
 			</div>
-			<div>Aprilyani Nur Safitri &copy; 2023</div>
+			<div>Ibram Raka Wicaksono &copy; 2026</div>
     </footer>
     <!-- footer end -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
