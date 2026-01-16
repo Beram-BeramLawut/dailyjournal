@@ -5,53 +5,39 @@ session_start();
 // Menyertakan code dari file koneksi
 include "koneksi.php";
 
-// Cek jika user sudah login, langsung lempar ke admin
 if (isset($_SESSION['username'])) {
     header("location:admin.php");
     exit;
 }
 
-// Inisialisasi variabel pesan error kosong
 $error_message = "";
 
-// --- PROSES LOGIN DIMULAI DI SINI (SEBELUM HTML) ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Ambil nilai input
     $userInput = $_POST['user'];
     $passInput = $_POST['pass'];
 
-    // Validasi input kosong (Backup PHP jika JS dimatikan)
     if (empty($userInput) || empty($passInput)) {
         $error_message = "Username dan Password tidak boleh kosong!";
     } else {
         $username = $userInput;
-        $password = md5($passInput); // Pastikan password di database juga tersimpan dalam format MD5
+        $password = md5($passInput); 
 
-        // Prepared statement
         $stmt = $conn->prepare("SELECT * FROM user WHERE username=? AND password=?");
         
-        // Parameter binding
         $stmt->bind_param("ss", $username, $password);
-        
-        // Eksekusi
+      
         $stmt->execute();
         
-        // Menampung hasil
         $hasil = $stmt->get_result();
-        
-        // Mengambil baris data
         $row = $hasil->fetch_array(MYSQLI_ASSOC);
 
-        // Cek hasil
         if (!empty($row)) {
-            // BERHASIL LOGIN
-            $_SESSION['username'] = $row['username']; // Gunakan username dari database agar konsisten
+
+            $_SESSION['username'] = $row['username']; 
             header("location:admin.php");
-            exit; // Penting: hentikan script setelah redirect
+            exit; 
         } else {
-            // GAGAL LOGIN
-            // Jangan di-redirect, tapi tampilkan pesan error di halaman ini
             $error_message = "Username atau password salah!";
         }
         
