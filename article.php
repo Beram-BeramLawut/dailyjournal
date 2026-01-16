@@ -3,7 +3,7 @@ include "koneksi.php";
 
 $keyword = $_POST['keyword'];
 
-// Jika keyword ada isinya, lakukan pencarian
+
 if ($keyword != '') {
     $sql = "SELECT * FROM article 
             WHERE judul LIKE ? OR isi LIKE ? OR tanggal LIKE ? OR username LIKE ?
@@ -11,12 +11,11 @@ if ($keyword != '') {
 
     $stmt = $conn->prepare($sql);
     $search = "%" . $keyword . "%";
-    // Binding parameter (s = string, ada 4 parameter)
     $stmt->bind_param("ssss", $search, $search, $search, $search);
     $stmt->execute();
     $hasil = $stmt->get_result();
 } else {
-    // Jika keyword kosong, tampilkan semua data
+
     $sql = "SELECT * FROM article ORDER BY tanggal DESC";
     $hasil = $conn->query($sql);
 }
