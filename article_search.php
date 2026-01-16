@@ -29,12 +29,10 @@
                 </thead>
                 <tbody id="result">
                     <?php
-                    // 1. QUERY DATA
                     $sql = "SELECT * FROM article ORDER BY tanggal DESC";
                     $hasil = $conn->query($sql);
                     $no = 1;
 
-                    // 2. LOOPING DATA
                     while ($row = $hasil->fetch_assoc()) {
                     ?>
                         <tr>
@@ -126,7 +124,7 @@
                             </div>
                         </div>
                         <?php
-                    } // AKHIR LOOPING
+                    } 
                     ?>
                 </tbody>
             </table>
@@ -166,7 +164,7 @@
 </div>
 <script>
     $(document).ready(function() {
-        // Event pencarian (Kode Ajax)
+
         $("#search").on("keyup", function() {
             var keyword = $(this).val();
             $.ajax({
@@ -186,7 +184,7 @@
 <?php
 include "upload_foto.php";
 
-// LOGIKA SIMPAN (INSERT & UPDATE) DALAM SATU BLOK
+
 if (isset($_POST['simpan'])) {
     $judul = $_POST['judul'];
     $isi = $_POST['isi'];
@@ -195,7 +193,7 @@ if (isset($_POST['simpan'])) {
     $gambar = '';
     $nama_gambar = $_FILES['gambar']['name'];
 
-    // Cek jika ada file gambar baru
+  
     if ($nama_gambar != '') {
         $cek_upload = upload_foto($_FILES["gambar"]);
         if ($cek_upload['status']) {
@@ -209,15 +207,14 @@ if (isset($_POST['simpan'])) {
         }
     }
 
-    // CEK APAKAH INI EDIT (Ada ID) ATAU TAMBAH (Tidak ada ID)
+
     if (isset($_POST['id'])) {
-        // --- LOGIKA UPDATE ---
         $id = $_POST['id'];
 
         if ($nama_gambar == '') {
-            $gambar = $_POST['gambar_lama']; // Pakai gambar lama jika tidak upload baru
+            $gambar = $_POST['gambar_lama']; 
         } else {
-            // Hapus gambar lama jika upload baru
+          
             if (file_exists("img/" . $_POST['gambar_lama'])) {
                 unlink("img/" . $_POST['gambar_lama']);
             }
@@ -227,7 +224,6 @@ if (isset($_POST['simpan'])) {
         $stmt->bind_param("sssssi", $judul, $isi, $gambar, $tanggal, $username, $id);
         $simpan = $stmt->execute();
     } else {
-        // --- LOGIKA INSERT (TAMBAH BARU) ---
         $stmt = $conn->prepare("INSERT INTO article (judul,isi,gambar,tanggal,username) VALUES (?,?,?,?,?)");
         $stmt->bind_param("sssss", $judul, $isi, $gambar, $tanggal, $username);
         $simpan = $stmt->execute();
@@ -249,7 +245,7 @@ if (isset($_POST['simpan'])) {
     $conn->close();
 }
 
-// LOGIKA HAPUS
+
 if (isset($_POST['hapus'])) {
     $id = $_POST['id'];
     $gambar = $_POST['gambar'];
