@@ -3,21 +3,17 @@ include "koneksi.php";
 
 $keyword = $_POST['keyword'];
 
-// Jika keyword ada isinya, lakukan pencarian
 if ($keyword != '') {
-    // Sesuaikan kolom pencarian dengan tabel gallery (deskripsi, tanggal, username)
     $sql = "SELECT * FROM gallery 
             WHERE deskripsi LIKE ? OR tanggal LIKE ? OR username LIKE ?
             ORDER BY tanggal DESC";
 
     $stmt = $conn->prepare($sql);
     $search = "%" . $keyword . "%";
-    // Binding parameter (s = string, ada 3 parameter)
     $stmt->bind_param("sss", $search, $search, $search);
     $stmt->execute();
     $hasil = $stmt->get_result();
 } else {
-    // Jika keyword kosong, tampilkan semua data
     $sql = "SELECT * FROM gallery ORDER BY tanggal DESC";
     $hasil = $conn->query($sql);
 }
@@ -112,4 +108,5 @@ while ($row = $hasil->fetch_assoc()) {
 
 <?php
 }
+
 ?>
