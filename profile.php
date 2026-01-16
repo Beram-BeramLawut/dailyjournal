@@ -2,20 +2,17 @@
 include "koneksi.php";  
 
 // 1. Ambil data user berdasarkan session
-// Kita tidak perlu session_start() lagi karena sudah ada di admin.php
 $username = $_SESSION['username'];
 
-// Ganti 'user' dengan nama tabel yang benar di database Anda (biasanya 'user')
+// Query data user
 $sql = "SELECT * FROM user WHERE username = '$username'";
 $result = $conn->query($sql);
 
-// Cek apakah data ditemukan
 if ($result->num_rows > 0) {
     $data = $result->fetch_assoc();
     $id = $data['id']; 
 } else {
-    // Jika error ini muncul, berarti nama tabel di database bukan 'user'
-    die("Error: User tidak ditemukan. Cek apakah nama tabel database Anda benar-benar 'user'?");
+    die("Error: User tidak ditemukan.");
 }
 
 // 2. Logika Update Data
@@ -23,31 +20,28 @@ if (isset($_POST['simpan'])) {
     $password_baru = $_POST['password'];
     $foto_baru = $_FILES['foto']['name'];
     
-    // A. Update Password (hanya jika diisi)
+    // Update Password
     if (!empty($password_baru)) {
         $password_md5 = md5($password_baru); 
         $sql_pass = "UPDATE user SET password = '$password_md5' WHERE id = '$id'";
         $conn->query($sql_pass);
     }
 
-    // B. Update Foto (hanya jika ada file diupload)
+    // Update Foto
     if (!empty($foto_baru)) {
-        $folder_tujuan = "img/"; // Pastikan folder 'img' ada
+        $folder_tujuan = "img/";
         $nama_file_unik = date('dmYHis') . "_" . $foto_baru; 
         $target_file = $folder_tujuan . $nama_file_unik;
         $tmp_file = $_FILES['foto']['tmp_name'];
 
-        // Upload file
         if (move_uploaded_file($tmp_file, $target_file)) {
-            // Update nama foto di database
             $sql_foto = "UPDATE user SET foto = '$nama_file_unik' WHERE id = '$id'";
             $conn->query($sql_foto);
         } else {
-            echo "<script>alert('Gagal upload foto. Pastikan folder img/ tersedia.');</script>";
+            echo "<script>alert('Gagal upload foto.');</script>";
         }
     }
 
-    // Refresh halaman agar perubahan terlihat
     echo "<script>
             alert('Profil berhasil diperbarui!');
             document.location='admin.php?page=profile';
@@ -79,17 +73,17 @@ if (isset($_POST['simpan'])) {
                 <input type="file" class="form-control" id="foto" name="foto">
             </div>
 
-            <div class="mb-3 text-center">
-                <label class="form-label d-block fw-bold">Foto Profil Saat Ini</label>
+            <div class="mb-3"> <label class="form-label d-block fw-bold">Foto Profil Saat Ini</label>
                 <?php 
                     if ($data['foto'] != "" && file_exists("img/" . $data['foto'])) {
-                        echo "<img src='img/$data[foto]' width='150' class='img-thumbnail rounded-circle'>";
+                        // rounded-circle DIHAPUS agar kotak
+                        echo "<img src='img/$data[foto]' width='150' class='img-thumbnail'>";
                     } else {
-                        echo "<img src='https://via.placeholder.com/150' width='150' class='img-thumbnail rounded-circle' alt='No Photo'>";
+                        // rounded-circle DIHAPUS agar kotak
+                        echo "<img src='https://via.placeholder.com/150' width='150' class='img-thumbnail' alt='No Photo'>";
                     }
                 ?>
             </div>
-
             <div class="d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary" name="simpan">Simpan Perubahan</button>
             </div>
