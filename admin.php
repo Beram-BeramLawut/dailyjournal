@@ -1,9 +1,9 @@
 <?php 
-//memulai session atau melanjutkan session yang sudah ada
+
 session_start(); 
 
 include "koneksi.php";
-//check jika belum ada user yang login arahkan ke halaman login
+
 if (!isset($_SESSION['username'])) { 
 	header("location:login.php"); 
 }
