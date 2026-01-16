@@ -29,15 +29,15 @@
                 </thead>
                 <tbody id="result">
                     <?php
-                    // PERBAIKAN 1: Masukkan koneksi database di sini
+        
                     include "koneksi.php"; 
 
-                    // 1. QUERY DATA
+
                     $sql = "SELECT * FROM gallery ORDER BY tanggal DESC";
                     $hasil = $conn->query($sql);
                     $no = 1;
 
-                    // 2. LOOPING DATA
+
                     while ($row = $hasil->fetch_assoc()) {
                     ?>
                         <tr>
@@ -125,7 +125,7 @@
                             </div>
                         </div>
                     <?php
-                    } // AKHIR LOOPING
+                    } 
                     ?>
                 </tbody>
             </table>
@@ -165,7 +165,7 @@
         $("#search").on("keyup", function() {
             var keyword = $(this).val();
             $.ajax({
-                url: "gallery_search.php", // PERBAIKAN 2: Ubah URL ke gallery_search.php
+                url: "gallery_search.php", 
                 type: "POST",
                 data: {
                     keyword: keyword
@@ -181,7 +181,7 @@
 <?php
 include "upload_foto.php";
 
-// LOGIKA SIMPAN (INSERT & UPDATE)
+
 if (isset($_POST['simpan'])) {
     $deskripsi = $_POST['deskripsi'];
     $tanggal = date("Y-m-d H:i:s");
@@ -189,7 +189,6 @@ if (isset($_POST['simpan'])) {
     $gambar = '';
     $nama_gambar = $_FILES['gambar']['name'];
 
-    // Cek jika ada file gambar baru
     if ($nama_gambar != '') {
         $cek_upload = upload_foto($_FILES["gambar"]);
         if ($cek_upload['status']) {
@@ -202,10 +201,8 @@ if (isset($_POST['simpan'])) {
             die;
         }
     }
-
-    // CEK APAKAH INI EDIT ATAU TAMBAH
     if (isset($_POST['id'])) {
-        // --- UPDATE ---
+   
         $id = $_POST['id'];
 
         if ($nama_gambar == '') {
@@ -220,7 +217,7 @@ if (isset($_POST['simpan'])) {
         $stmt->bind_param("ssssi", $gambar, $deskripsi, $tanggal, $username, $id);
         $simpan = $stmt->execute();
     } else {
-        // --- INSERT ---
+
         if ($gambar != '') {
             $stmt = $conn->prepare("INSERT INTO gallery (gambar, deskripsi, tanggal, username) VALUES (?,?,?,?)");
             $stmt->bind_param("ssss", $gambar, $deskripsi, $tanggal, $username);
@@ -246,7 +243,6 @@ if (isset($_POST['simpan'])) {
     $conn->close();
 }
 
-// LOGIKA HAPUS
 if (isset($_POST['hapus'])) {
     $id = $_POST['id'];
     $gambar = $_POST['gambar'];
@@ -276,4 +272,5 @@ if (isset($_POST['hapus'])) {
     $stmt->close();
     $conn->close();
 }
+
 ?>
