@@ -1,28 +1,23 @@
 <?php
-// 1. PENTING: Panggil koneksi agar variabel $conn dikenali
+
 include "koneksi.php";
 
-// 2. Query untuk mengambil data Artikel
+
 $sql_article = "SELECT * FROM article";
 $result_article = $conn->query($sql_article);
-$jumlah_article = $result_article->num_rows; // Hitung jumlah baris
+$jumlah_article = $result_article->num_rows; 
 
-// 3. Query untuk mengambil data Gallery
 $sql_gallery = "SELECT * FROM gallery";
 $result_gallery = $conn->query($sql_gallery);
-$jumlah_gallery = $result_gallery->num_rows; // Hitung jumlah baris
+$jumlah_gallery = $result_gallery->num_rows; 
 
-// 4. Cek Session untuk Profile
-// Session biasanya sudah start di admin.php, tapi untuk keamanan kita cek lagi
 if (isset($_SESSION['username'])) {
     $username_login = $_SESSION['username'];
     
-    // Ambil data user dari database (sesuaikan nama tabel user Anda, misal 'user' atau 'webdailyjournal')
     $sql_user = "SELECT * FROM user WHERE username = '$username_login'";
     $result_user = $conn->query($sql_user);
     $user_data = $result_user->fetch_assoc();
 } else {
-    // Default jika session hilang (jarang terjadi jika akses dari admin)
     $username_login = "User";
     $user_data = ['foto' => ''];
 }
@@ -35,8 +30,7 @@ if (isset($_SESSION['username'])) {
         
         <div class="mt-4">
             <?php
-            // Logika Foto: Cek apakah ada foto di database DAN filenya ada di folder
-            $foto_profil = "img/default.jpg"; // Set default awal
+            $foto_profil = "img/default.jpg"; 
             
             if (!empty($user_data['foto']) && file_exists("img/" . $user_data['foto'])) {
                 $foto_profil = "img/" . $user_data['foto'];
